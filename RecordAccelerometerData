@@ -1,0 +1,40 @@
+#reads serial port, skips empty lines, listens to port response stops recording if no response for 10 loops
+#uses function writeCSVArd to print all the data to file
+
+import serial
+from time import sleep
+import os
+
+def writeCSVArd(headings, data):
+    s1 = headings + newdata
+    s = ' '.join(s1)
+    s = s.replace("\r\n", "\n")
+    s = s.replace(" ", "")
+    print(s,  file=open('m:\log1.xls', 'w'))
+    
+port = "COM4"
+ser = serial.Serial(port, 9600, timeout=0)
+sleep(1)
+counter = 0
+newdata = []
+
+while counter < 10:
+    data = ser.read(9999)
+    if len(data) > 0:
+        data1 = data.decode('utf-8')
+        print(data1)
+        newdata.append(data1)
+        
+        counter = 0
+    else: 
+        counter +=1
+        sleep(0.5)        
+print('port not connected')
+ser.close()  
+
+
+ACCheadings = ['gx\tgy\tgz\tax\tay\taz\r\n']
+writeCSVArd(ACCheadings, newdata)
+
+
+print(os.getcwd())
